@@ -1,0 +1,64 @@
+/* Login */
+import React, { useState } from 'react'
+import {signInWithEmailAndPassword} from "firebase/auth";
+
+const Login = () => {
+  const [email,setEmail]=useState();
+  const [password,setPassword]=useState();
+  const handleLogin=async(e)=>{
+    e.preventDefault();
+  }
+  return (
+    <div>
+      <form >
+        <h2>Login</h2>
+        <input type="text" placeholder='username' value={email} onChange={(e)=>{setEmail(e.target.value)}} />
+        <input type='password' placeholder='password' value={password} onChange={(e)=>{setPassword(e.target.value)}} />
+        <input type="button" value="login" onClick={(e)=>{handleLogin(e)}}/>
+      </form>
+    </div>
+  )
+}
+
+export default Login
+
+
+
+/* SIGNUP */
+import React, { useState } from 'react'
+import {createUserWithEmailAndPassword,onAuthStateChanged} from "firebase/auth";
+import {auth} from "../auth/Firebase"
+
+const Signup = () => {
+    const [email,setEmail]=useState("");
+    const [password,setPassword]=useState("");
+    const [user,setUser]=useState();
+
+    onAuthStateChanged(auth,(currentUser)=>{
+        setUser(currentUser);
+    })
+
+    const handleRegister=async(e)=>{
+        e.preventDefault();
+        try{
+        const user = await createUserWithEmailAndPassword(auth,email,password);
+        }
+        catch(e){
+            console.log(e.message);
+        }
+    }
+
+  return (
+    <div>
+      <form>
+        <h2>Register</h2>
+        <input type="text" placeholder='username' value={email} onChange={(e)=>{setEmail(e.target.value)}} />
+        <input type='password' placeholder='password' value={password} onChange={(e)=>{setPassword(e.target.value)}} />
+        <input type="button" value="signup" onClick={(e)=>{handleRegister(e)}} />
+        <h2>{user.email}</h2>
+      </form>
+    </div>
+  )
+}
+
+export default Signup
